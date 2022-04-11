@@ -7,6 +7,7 @@ function Header() {
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!text.trim()) return;
     dispatch(addTodo({ id: nanoid(), text: text, completed: false }));
     setText('');
   };

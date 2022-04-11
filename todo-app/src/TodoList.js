@@ -1,16 +1,16 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleTodo, removeTodo } from './redux/todos/todoSlice';
+import {
+  toggleTodo,
+  removeTodo,
+  selectTodos,
+  selectActiveFilter,
+  selectFilteredTodos,
+} from './redux/todos/todoSlice';
 function TodoList() {
-  const todos = useSelector((state) => state.todos.items);
   const dispatch = useDispatch();
-  const activeFilter = useSelector((state) => state.todos.activeFilter);
-  let filteredTodos = todos;
-  if (activeFilter !== 'all') {
-    filteredTodos = todos.filter((todo) =>
-      activeFilter === 'active' ? !todo.completed : todo.completed
-    );
-  }
+  const filteredTodos = useSelector(selectFilteredTodos);
+
   return (
     <ul className="todo-list">
       {filteredTodos.map((todo) => (
