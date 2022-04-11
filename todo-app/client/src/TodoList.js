@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  toggleTodo,
-  removeTodo,
+  updateTodoAsync,
+  removeTodoAsync,
   selectFilteredTodos,
   getTodosAsync,
 } from './redux/todos/todoSlice';
@@ -23,6 +23,12 @@ function TodoList() {
     );
   }
 
+  const handleToggle = (id, completed) => {
+    dispatch(updateTodoAsync({ id, data: { completed } }));
+  };
+  const handleRemove = (id) => {
+    dispatch(removeTodoAsync(id));
+  };
   return (
     <ul className="todo-list">
       {filteredTodos.map((todo) => (
@@ -31,13 +37,13 @@ function TodoList() {
             <input
               className="toggle"
               type="checkbox"
-              onChange={() => dispatch(toggleTodo({ id: todo.id }))}
+              onChange={() => handleToggle(todo.id, !todo.completed)}
               checked={todo.completed}
             />
             <label>{todo.text}</label>
             <button
               className="destroy"
-              onClick={() => dispatch(removeTodo({ id: todo.id }))}
+              onClick={() => handleRemove(todo.id)}
             ></button>
           </div>
         </li>

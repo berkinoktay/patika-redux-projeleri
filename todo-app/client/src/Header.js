@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addTodo } from './redux/todos/todoSlice';
+import { addTodoAsync } from './redux/todos/todoSlice';
 function Header() {
   const [text, setText] = useState('');
   const dispatch = useDispatch();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!text.trim()) return;
-    dispatch(addTodo({ text }));
+    await dispatch(addTodoAsync({ text }));
     setText('');
   };
   return (
