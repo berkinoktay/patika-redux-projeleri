@@ -7,6 +7,15 @@ export const getTodosAsync = createAsyncThunk(
     return response.data;
   }
 );
+export const clearCompletedAsync = createAsyncThunk(
+  'todos/clearCompletedAsync',
+  async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_BASE_URL}/todos/clear`
+    );
+    return response.data;
+  }
+);
 export const addTodoAsync = createAsyncThunk(
   'todos/addTodoAsync',
   async (data) => {
@@ -27,7 +36,7 @@ export const removeTodoAsync = createAsyncThunk(
   }
 );
 export const updateTodoAsync = createAsyncThunk(
-  'updateTodoAsync',
+  'todos/updateTodoAsync',
   async ({ id, data }) => {
     const response = await axios.patch(
       `${process.env.REACT_APP_API_BASE_URL}/todos/${id}`,
@@ -36,16 +45,35 @@ export const updateTodoAsync = createAsyncThunk(
     return response.data;
   }
 );
+
 export const todoSlice = createSlice({
   name: 'todos',
   initialState: {
     items: [],
-    activeFilter: 'all',
+    activeFilter: localStorage.getItem('activeFilter') || 'all',
     toggleCompleted: false,
     isLoading: false,
     error: null,
   },
   reducers: {
+    /*
+    ? addTodo Kısmını artık backend tarafında hallettiğimiz için buradan kaldırdık
+    addTodo: {
+      reducer: (state, action) => {
+        state.items.push(action.payload);
+      },
+      ? payload reducer tarafına düşüp eklenmeden önce prepare tarafına düşer ve burada yapılandırılabilir
+      prepare: ({ text }) => {
+        return {
+          payload: {
+            id: nanoid(),
+            completed: false,
+            text:text,
+          },
+        };
+      },
+    },
+    */
     // toggleTodo: (state, action) => {
     //   const { id } = action.payload;
     //   const todo = state.items.find((todo) => todo.id === id);
@@ -59,10 +87,10 @@ export const todoSlice = createSlice({
     setFilter: (state, action) => {
       state.activeFilter = action.payload;
     },
-    clearCompleted: (state) => {
-      const newTodos = state.items.filter((todo) => !todo.completed);
-      state.items = newTodos;
-    },
+    // clearCompleted: (state) => {
+    //   const newTodos = state.items.filter((todo) => todo.completed === false);
+    //   state.items = newTodos;
+    // },
     activeAllTodos: (state) => {
       if (!state.toggleCompleted) {
         state.items.forEach((todo) => (todo.completed = true));
@@ -100,9 +128,13 @@ export const todoSlice = createSlice({
       const index = state.items.findIndex((todo) => todo.id == id);
       state.items[index].completed = completed;
     },
+    // Clear Completed
+    [clearCompletedAsync.fulfilled]: (state, action) => {
+      state.items = action.payload;
+    },
   },
 });
-// Birden fazla componentte aynı selectorleri çağırmak yerine burada global selectorler tutulur.
+//? Birden fazla componentte aynı selectorleri çağırmak yerine burada global selectorler tutulur.
 export const selectTodos = (state) => state.todos.items;
 export const selectActiveFilter = (state) => state.todos.activeFilter;
 export const selectFilteredTodos = (state) => {

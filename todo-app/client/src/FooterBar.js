@@ -1,8 +1,8 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   setFilter,
-  clearCompleted,
+  clearCompletedAsync,
   selectActiveFilter,
 } from './redux/todos/todoSlice';
 function FooterBar() {
@@ -13,6 +13,9 @@ function FooterBar() {
   const completedTodos = useSelector(
     (state) => state.todos.items.filter((todo) => todo.completed).length
   );
+  useEffect(() => {
+    localStorage.setItem('activeFilter', activeFilter);
+  }, [activeFilter]);
   const dispatch = useDispatch();
   return (
     <footer className="footer">
@@ -53,7 +56,7 @@ function FooterBar() {
       {completedTodos > 0 && (
         <button
           className="clear-completed"
-          onClick={() => dispatch(clearCompleted())}
+          onClick={() => dispatch(clearCompletedAsync())}
         >
           Clear completed
         </button>

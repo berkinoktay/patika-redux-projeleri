@@ -41,7 +41,11 @@ let todos = [
 ];
 
 app.get('/todos', (req, res) => res.send(todos));
-
+app.get('/todos/clear', (req, res) => {
+  const filteredTodo = todos.filter((todo) => todo.completed === false);
+  todos = filteredTodo;
+  res.send(todos);
+});
 app.post('/todos', (req, res) => {
   const todo = { text: req.body.text, id: nanoid(), completed: false };
   todos.push(todo);
