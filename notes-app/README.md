@@ -1,5 +1,5 @@
 Uygulama içi görsel:
-![](/screenshots/notes-app.png)
+![](./screenshots/notes-app.png)
 
 # Getting Started with Create React App
 
